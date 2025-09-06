@@ -6,7 +6,11 @@ const morgan = require("morgan");
 const connectDB = require("./src/config/db");
 
 dotenv.config();
-connectDB();
+
+// Only connect when NOT in test
+if (process.env.NODE_ENV !== "test") {
+  connectDB();
+}
 
 const app = express();
 app.use(express.json());
@@ -14,11 +18,9 @@ app.use(cors());
 app.use(helmet());
 app.use(morgan("dev"));
 
-//test
+// Test route
 app.get("/ping", (req, res) => {
-  res.status(200).json({
-    message: "pong",
-  });
+  res.status(200).json({ message: "pong" });
 });
 
 // Routes
@@ -34,5 +36,10 @@ app.get("/", (req, res) => {
 const { errorHandler } = require("./src/middlewares/errorHandler");
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// Only start server if NOT in test
+if (process.env.NODE_ENV !== "test") {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+}
+
+module.exports = app; // 👈 export app for Jest
