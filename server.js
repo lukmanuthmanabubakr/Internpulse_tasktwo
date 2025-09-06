@@ -26,6 +26,10 @@ app.use("/api/auth", require("./src/routes/authRoutes"));
 app.use("/api/wallets", require("./src/routes/walletRoutes"));
 app.use("/api/transactions", require("./src/routes/transactionRoutes"));
 
+app.get("/", (req, res) => {
+  res.send("Home Page");
+});
+
 // Error handling middleware
 const { errorHandler } = require("./src/middlewares/errorHandler");
 app.use(errorHandler);
